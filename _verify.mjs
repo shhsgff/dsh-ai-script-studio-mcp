@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+const tok=(readFileSync(path.join(process.env.USERPROFILE,'.dsh/skill-mcp-manager/registry.json'),'utf8').match(/ghp_[A-Za-z0-9]{20,}/)||[])[0];
+const H={Authorization:'Bearer '+tok,'User-Agent':'x',Accept:'application/vnd.github+json'};
+const repo=await (await fetch('https://api.github.com/repos/shhsgff/dsh-ai-script-studio-mcp',{headers:H})).json();
+console.log('default_branch',repo.default_branch,'size',repo.size,'pushed',repo.pushed_at);
+const cm=await (await fetch('https://api.github.com/repos/shhsgff/dsh-ai-script-studio-mcp/commits?per_page=5',{headers:H})).json();
+console.log('commits',cm.map(c=>c.sha.slice(0,7)+' '+c.commit.message.split('\n')[0]).join(' | '));
+const tr=await (await fetch('https://api.github.com/repos/shhsgff/dsh-ai-script-studio-mcp/git/trees/'+cm[0].commit.tree.sha+'?recursive=1',{headers:H})).json();
+console.log('files',tr.tree.filter(t=>t.type==='blob').map(t=>t.path).join(', '));

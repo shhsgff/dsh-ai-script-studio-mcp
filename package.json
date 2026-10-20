@@ -1,6 +1,6 @@
 {
   "name": "dsh-ai-script-studio-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "把《AI 智能剧本创作工具》接成 DeepSeek Harness / 任意 MCP 客户端的桥（stdio）",
   "bin": {
     "aisc-mcp": "bin/aisc-mcp.mjs",
@@ -14,7 +14,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/server.test.mjs"
   },
   "engines": {
     "node": ">=20"

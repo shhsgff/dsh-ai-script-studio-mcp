@@ -1,0 +1,11 @@
+import { spawn } from 'node:child_process';
+import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path';
+const dir = fs.mkdtempSync(path.join(os.tmpdir(),'aisc-dbg-'));
+const cfg = path.join(dir,'mcp-bridge.json');
+fs.writeFileSync(cfg, JSON.stringify({port:9, token:'x'}));
+const c = spawn(process.execPath, ['server.js', cfg], {stdio:['pipe','pipe','pipe']});
+let out=''; let err='';
+c.stdout.on('data',d=>out+=d); c.stderr.on('data',d=>err+=d);
+c.stdin.write(JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'list_scripts',arguments:{}}})+'\n');
+setTimeout(()=>{ c.stdin.end(); }, 2500);
+c.on('close',()=>{ console.log('OUT:', out); console.log('ERR:', err); });
